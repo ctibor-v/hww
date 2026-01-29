@@ -4,47 +4,18 @@
     <title>Lovy bez zbraní</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        // Zachovává hww.cz v adresním řádku i při navigaci v iframe
-        window.addEventListener('load', function() {
-            const iframe = document.getElementById('gallery');
-            const originalUrl = 'https://eu.zonerama.com/robitc';
-            
-            iframe.onload = function() {
-                try {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    // Interceptuj všechny linky v iframe
-                    const links = iframeDoc.querySelectorAll('a[href]');
-                    links.forEach(link => {
-                        const href = link.getAttribute('href');
-                        if (href && !href.startsWith('http') && !href.startsWith('/')) {
-                            // Relativní odkazy - kontroluj jestli zůstávají v Zoneramě
-                            const fullUrl = new URL(href, originalUrl).href;
-                            if (!fullUrl.includes('eu.zonerama.com/robitc')) {
-                                link.addEventListener('click', function(e) {
-                                    e.preventDefault();
-                                    window.open(fullUrl, '_blank');
-                                });
-                            }
-                        } else if (href && href.startsWith('http') && !href.includes('eu.zonerama.com')) {
-                            // Externí odkazy ven
-                            link.target = '_blank';
-                        }
-                    });
-                } catch (e) {
-                    // CORS blokuje přístup - iframe zůstane uzavřený
-                }
-            };
-        });
-        
-        // PushState pro zachování URL při navigaci
-        let currentPath = '/robitc';
-        history.replaceState({path: currentPath}, '', window.location.origin + currentPath);
-        
-        window.addEventListener('popstate', function(e) {
-            if (e.state && e.state.path) {
-                currentPath = e.state.path;
-            }
-        });
+const iframe = document.querySelector('iframe');
+const stringToFind = 'eu.zonerama.com/robitc';
+
+iframe.addEventListener('load', () => {
+  try {
+    if (!iframe.contentWindow.location.href.includes(stringToFind)) {
+      window.location.href = iframe.contentWindow.location.href;
+    }
+  } catch (e) {
+    console.error('CORS error');
+  }
+});
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
