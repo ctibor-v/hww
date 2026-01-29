@@ -9,13 +9,11 @@ const iframe = document.querySelector('iframe');
 const stringToFind = 'eu.zonerama.com/robitc';
 
 iframe.addEventListener('load', () => {
-  try {
+
     if (!iframe.contentWindow.location.href.includes(stringToFind)) {
       window.location.href = iframe.contentWindow.location.href;
     }
-  } catch (e) {
-    console.error('CORS error');
-  }
+
 });
             })
     </script>
